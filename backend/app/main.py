@@ -22,10 +22,15 @@ rag_system = MathRAGSystem()
 async def health_check():
     return {"status": "healthy", "device": rag_system.device}
 
-@app.post("/search", response_model=List[SearchResult])
+@app.post("/api/search", response_model=List[SearchResult])
 async def search(request: SearchRequest):
-    return rag_system.hybrid_search(
+    print(f"Received query: {request.query}")
+    results = rag_system.hybrid_search(
         query=request.query,
         k=request.k,
         filters=request.filters
     )
+    print(f"Returning {len(results)} results")
+    return results
+
+
